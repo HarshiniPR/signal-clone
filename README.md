@@ -4,8 +4,8 @@ A production-quality Signal Messenger clone with real-time messaging, group chat
 
 ## Live Demo
 
-- **Frontend:** [https://your-frontend.vercel.app](https://your-frontend.vercel.app)
-- **Backend API:** [https://your-backend.onrender.com](https://your-backend.onrender.com)
+- **Frontend:** [https://signal-clone-ca1qk3zh4-fun12434.vercel.app/login](https://signal-clone-ca1qk3zh4-fun12434.vercel.app/login)
+- **Backend API:** [https://signal-clone-b8p9.onrender.com/](https://signal-clone-b8p9.onrender.com/)
 
 ## Tech Stack
 
@@ -65,15 +65,15 @@ npm run dev
 ```
 
 ## Assumptions & Mocked Data
-OTP is fixed to 123456
-End-to-end encryption is simulated (boolean flag only)
-Phone verification is mocked; no actual SMS sent
-Voice calls, video calls, stories, file attachments are placeholder features
-SQLite is used for simplicity; PostgreSQL recommended for production
+* OTP is fixed to 123456
+* End-to-end encryption is simulated (boolean flag only)
+* Phone verification is mocked; no actual SMS sent
+* Voice calls, video calls, stories, file attachments are placeholder features
+* SQLite is used for simplicity; PostgreSQL recommended for production
 
 ## Deployment
-Frontend: Deployed on Vercel with next build
-Backend: Deployed on Render with uvicorn (start command: uvicorn app.main:app --host 0.0.0.0 --port $PORT)
+* Frontend: Deployed on Vercel with next build
+* Backend: Deployed on Render with uvicorn (start command: uvicorn app.main:app --host 0.0.0.0 --port $PORT)
 
 ## Environment Variables
 Frontend (Vercel)
