@@ -7,12 +7,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { 
-  Phone, 
-  Video, 
-  MoreVertical, 
-  ArrowLeft, 
-  Send, 
+import {
+  Phone,
+  Video,
+  MoreVertical,
+  ArrowLeft,
+  Send,
   Paperclip,
   Smile,
   Check,
@@ -23,10 +23,10 @@ import {
 import { conversationApi, messageApi } from '@/lib/api';
 import { useAuthStore } from '@/store/authStore';
 import { useChatStore } from '@/store/chatStore';
-import { 
-  getSocket, 
-  sendSocketMessage, 
-  sendTyping, 
+import {
+  getSocket,
+  sendSocketMessage,
+  sendTyping,
   sendReadReceipt,
   sendDeliveredStatus,
   joinConversation,
@@ -34,16 +34,6 @@ import {
 } from '@/lib/socket';
 import { cn, formatMessageTime, formatDateHeader, getInitials, stringToColor } from '@/lib/utils';
 import toast from 'react-hot-toast';
-
-// Extended member type with last_seen_at
-interface MemberUser {
-  id: number;
-  username: string;
-  display_name: string;
-  avatar_url: string | null;
-  is_online: boolean;
-  last_seen_at: string | null;
-}
 
 interface Message {
   id: number;
@@ -73,25 +63,32 @@ interface Conversation {
   avatar_url: string | null;
   members: Array<{
     user_id: number;
-    user: MemberUser;
+    user: {
+      id: number;
+      username: string;
+      display_name: string;
+      avatar_url: string | null;
+      is_online: boolean;
+      last_seen_at: string | null;
+    };
   }>;
 }
 
 export default function ChatPanel() {
   const { user } = useAuthStore();
-  const { 
-    activeConversationId, 
+  const {
+    activeConversationId,
     setActiveConversation,
     typingUsers,
     setTypingUser,
     onlineUsers,
     setUserOnline
   } = useChatStore();
-  
+
   const [messageInput, setMessageInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const queryClient = useQueryClient();
 
   // Fetch conversation details
@@ -142,7 +139,7 @@ export default function ChatPanel() {
       if (data.conversation_id === activeConversationId) {
         queryClient.invalidateQueries({ queryKey: ['messages', activeConversationId] });
         queryClient.invalidateQueries({ queryKey: ['conversations'] });
-        
+
         // Send delivered status
         if (data.sender_id !== user?.id) {
           sendDeliveredStatus(data.id);
@@ -157,11 +154,11 @@ export default function ChatPanel() {
       }
     };
 
-    const handleMessageRead = (data: any) => {
+    const handleMessageRead = () => {
       queryClient.invalidateQueries({ queryKey: ['messages', activeConversationId] });
     };
 
-    const handleMessageDelivered = (data: any) => {
+    const handleMessageDelivered = () => {
       queryClient.invalidateQueries({ queryKey: ['messages', activeConversationId] });
     };
 
@@ -201,7 +198,7 @@ export default function ChatPanel() {
 
     setMessageInput('');
     setIsTyping(false);
-    
+
     // Optimistic update
     queryClient.invalidateQueries({ queryKey: ['conversations'] });
   };
@@ -229,10 +226,10 @@ export default function ChatPanel() {
   const getConversationName = () => {
     if (conversation?.name) return conversation.name;
     const otherMember = conversation?.members.find(m => m.user_id !== user?.id);
-    return otherMember?.user.display_name || 'Chat';
+    return otherMember?.user.display_name || otherMember?.user.username || 'Chat';
   };
 
-  const getOtherMember = (): MemberUser | undefined => {
+  const getOtherMember = () => {
     return conversation?.members.find(m => m.user_id !== user?.id)?.user;
   };
 
@@ -420,8 +417,8 @@ export default function ChatPanel() {
 
                       <div className={cn(
                         "relative px-3 py-2 rounded-lg shadow-sm",
-                        isSent 
-                          ? "bg-[#DCF8C6] dark:bg-[#005C4B] rounded-tr-none" 
+                        isSent
+                          ? "bg-[#DCF8C6] dark:bg-[#005C4B] rounded-tr-none"
                           : "bg-white dark:bg-[#202C33] rounded-tl-none"
                       )}>
                         {/* Sender name in groups */}
@@ -482,13 +479,13 @@ export default function ChatPanel() {
 
       {/* Input Area */}
       <div className="h-16 bg-[#F0F2F5] dark:bg-[#1F2C34] border-t border-gray-200 dark:border-gray-700 px-4 flex items-center gap-2 flex-shrink-0">
-        <button 
+        <button
           className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors"
           onClick={() => toast('Attachments coming soon!')}
         >
           <Paperclip size={20} className="text-gray-500" />
         </button>
-        <button 
+        <button
           className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors"
           onClick={() => toast('Emoji picker coming soon!')}
         >
@@ -514,8 +511,8 @@ export default function ChatPanel() {
           disabled={!messageInput.trim()}
           className={cn(
             "p-2 rounded-full transition-all",
-            messageInput.trim() 
-              ? "bg-signal-blue text-white hover:bg-signal-blue-dark" 
+            messageInput.trim()
+              ? "bg-signal-blue text-white hover:bg-signal-blue-dark"
               : "bg-gray-200 text-gray-400 cursor-not-allowed"
           )}
         >
