@@ -10,17 +10,15 @@ import { useAuthStore } from '@/store/authStore';
 
 export default function Home() {
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated) {
-        router.replace('/chat');
-      } else {
-        router.replace('/login');
-      }
+    if (isAuthenticated) {
+      router.replace('/chat');
+    } else {
+      router.replace('/login');
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, router]);
 
   // Show loading state while redirecting
   return (
