@@ -4,7 +4,7 @@ A production-quality Signal Messenger clone with real-time messaging, group chat
 
 ## Live Demo
 
-- **Frontend:** [https://signal-clone-ca1qk3zh4-fun12434.vercel.app/login](https://signal-clone-ca1qk3zh4-fun12434.vercel.app/login)
+- **Frontend:** [https://signal-clone-ivory.vercel.app/](https://signal-clone-ivory.vercel.app/)
 - **Backend API:** [https://signal-clone-b8p9.onrender.com/](https://signal-clone-b8p9.onrender.com/)
 
 ## Tech Stack
